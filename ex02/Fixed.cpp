@@ -12,7 +12,7 @@ Fixed::Fixed()
 Fixed::Fixed(const int n)
 {
 	std::cout << "Int constructor called" << std::endl;
-	if (n > (INT_MAX / (1 << _factorial_bit)))
+	if (n > (99999999 / (1 << _factorial_bit)))
 	{
 		std::cerr << "Warning: integer too large, value reset to 0" << std::endl;
 		_fixed_point = 0;
@@ -68,16 +68,37 @@ float Fixed::toFloat(void) const
 	return (float)_fixed_point / (1 << _factorial_bit);
 }
 
-std::ostream& operator<<(std::ostream& os, const Fixed& fixed)
-{
+std::ostream &operator<<(std::ostream &os, const Fixed &fixed) {
 	os << fixed.toFloat();
 	return os;
 }
 
-bool operator < (Fixed fixed)
-{
-	if (_fixed_point < fixed._fixed_point)
-		return false;
-	else
-		return true;
+
+bool Fixed::operator<(const Fixed &arg)	const	{return _fixed_point < arg._fixed_point;}
+bool Fixed::operator>(const Fixed &arg)	const	{return _fixed_point > arg._fixed_point;}
+bool Fixed::operator==(const Fixed &arg)const	{return _fixed_point == arg._fixed_point;}
+bool Fixed::operator!=(const Fixed &arg)const	{return _fixed_point != arg._fixed_point;}
+bool Fixed::operator<=(const Fixed &arg)const	{return _fixed_point <= arg._fixed_point;}
+bool Fixed::operator>=(const Fixed &arg)const	{return _fixed_point >= arg._fixed_point;}
+
+Fixed Fixed::operator+(const Fixed &other) const {
+	Fixed result;
+	result.setRawBits(this->_fixed_point + other._fixed_point);
+	return result;
 }
+Fixed Fixed::operator-(const Fixed &arg) const {
+	Fixed result;
+	result.setRawBits(_fixed_point * arg._fixed_point);
+	return _fixed_point + arg._fixed_point;
+}
+Fixed Fixed::operator*(const Fixed &arg) const {
+	Fixed result;
+	result.setRawBits(_fixed_point * arg._fixed_point);
+	return _fixed_point + arg._fixed_point;
+}
+Fixed Fixed::operator/(const Fixed &arg) const {
+	Fixed result;
+	result.setRawBits(_fixed_point / arg._fixed_point);
+	return _fixed_point + arg._fixed_point;
+}
+

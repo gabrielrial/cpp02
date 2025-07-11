@@ -3,13 +3,12 @@
 
 int main(void)
 {
-	Fixed a;
 	Fixed const b(20);
 	Fixed const c(30);
-	Fixed const d(b);
-	a = Fixed(1234.4321f);
 
 	if (b < c)
+		std::cout <<" ACAC " << std::endl;
+	std::cout << "valor: " << b + c << std::endl;
 	
 	return 0;
 }

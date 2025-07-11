@@ -22,13 +22,18 @@ public:
 
 	friend std::ostream &operator<<(std::ostream &os, const Fixed &fixed);
 
-	bool operator < (Fixed fixed)
-	{
-		if (_fixed_point < fixed._fixed_point)
-			return false;
-		else
-			return true;
-	}
+	// Comparasion.
+	bool operator<(const Fixed &arg) const;
+	bool operator>(const Fixed &arg) const;
+	bool operator==(const Fixed &arg) const;
+	bool operator!=(const Fixed &arg) const;
+	bool operator<=(const Fixed &arg) const;
+	bool operator>=(const Fixed &arg) const;
+
+	Fixed operator+(const Fixed &other) const;
+	Fixed operator-(const Fixed &other) const;
+	Fixed operator*(const Fixed &other) const;
+	Fixed operator/(const Fixed &other) const;
 
 
 private:
