@@ -35,6 +35,11 @@ public:
 	Fixed operator*(const Fixed &other) const;
 	Fixed operator/(const Fixed &other) const;
 
+	Fixed &Fixed::operator++();
+	Fixed &Fixed::operator++(int);
+	Fixed &Fixed::operator--();
+	Fixed &Fixed::operator--(int);
+
 
 private:
 	int _fixed_point;

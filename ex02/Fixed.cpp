@@ -89,16 +89,43 @@ Fixed Fixed::operator+(const Fixed &other) const {
 Fixed Fixed::operator-(const Fixed &arg) const {
 	Fixed result;
 	result.setRawBits(_fixed_point * arg._fixed_point);
-	return _fixed_point + arg._fixed_point;
+	return result;
 }
 Fixed Fixed::operator*(const Fixed &arg) const {
 	Fixed result;
 	result.setRawBits(_fixed_point * arg._fixed_point);
-	return _fixed_point + arg._fixed_point;
+	return result;
 }
 Fixed Fixed::operator/(const Fixed &arg) const {
 	Fixed result;
 	result.setRawBits(_fixed_point / arg._fixed_point);
-	return _fixed_point + arg._fixed_point;
+	return result;
 }
+
+Fixed &Fixed::operator++()
+{
+	_fixed_point++;
+	return *this;
+}
+
+Fixed &Fixed::operator++(int)
+{
+	Fixed a(*this);
+	_fixed_point++;
+	return *this;
+}
+
+Fixed &Fixed::operator--()
+{
+	_fixed_point--;
+	return *this;
+}
+
+Fixed &Fixed::operator--(int)
+{
+	Fixed a(*this);
+	_fixed_point--;
+	return *this;
+}
+
 
