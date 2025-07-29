@@ -22,7 +22,7 @@ public:
 
 	friend std::ostream &operator<<(std::ostream &os, const Fixed &fixed);
 
-	// Comparasion.
+	// Comparison.
 	bool operator<(const Fixed &arg) const;
 	bool operator>(const Fixed &arg) const;
 	bool operator==(const Fixed &arg) const;
