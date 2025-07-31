@@ -11,19 +11,13 @@ Fixed::Fixed()
 Fixed::Fixed(const int n)
 {
 	std::cout << "Int constructor called" << std::endl;
-	if (n > (2147483647 / (1 << _factorial_bit)))
-	{
-		std::cerr << "Warning: integer too large, value reset to 0" << std::endl;
-		_fixed_point = 0;
-		return;
-	}
-	_fixed_point = n << _factorial_bit;
+	_fixed_point = n << _fractional_bit;
 }
 
 Fixed::Fixed(const float f)
 {
 	std::cout << "Float constructor called" << std::endl;
-	_fixed_point = roundf(f * (1 << _factorial_bit));
+	_fixed_point = roundf(f * (1 << _fractional_bit));
 }
 
 Fixed::Fixed(const Fixed &other)
@@ -59,12 +53,12 @@ void Fixed::setRawBits(int const raw)
 
 int Fixed::toInt(void) const
 {
-	return _fixed_point >> _factorial_bit;
+	return _fixed_point >> _fractional_bit;
 }
 
 float Fixed::toFloat(void) const
 {
-	return (float)_fixed_point / (1 << _factorial_bit);
+	return static_cast<float>(_fixed_point) / (1 << _fractional_bit);
 }
 
 std::ostream &operator<<(std::ostream &os, const Fixed &fixed)
@@ -73,6 +67,7 @@ std::ostream &operator<<(std::ostream &os, const Fixed &fixed)
 	return os;
 }
 
+// Comparisons
 bool Fixed::operator<(const Fixed &arg) const { return _fixed_point < arg._fixed_point; }
 bool Fixed::operator>(const Fixed &arg) const { return _fixed_point > arg._fixed_point; }
 bool Fixed::operator==(const Fixed &arg) const { return _fixed_point == arg._fixed_point; }
@@ -80,72 +75,84 @@ bool Fixed::operator!=(const Fixed &arg) const { return _fixed_point != arg._fix
 bool Fixed::operator<=(const Fixed &arg) const { return _fixed_point <= arg._fixed_point; }
 bool Fixed::operator>=(const Fixed &arg) const { return _fixed_point >= arg._fixed_point; }
 
+// Arithmetic
 Fixed Fixed::operator+(const Fixed &other) const
 {
 	Fixed result;
 	result.setRawBits(this->_fixed_point + other._fixed_point);
 	return result;
 }
+
 Fixed Fixed::operator-(const Fixed &arg) const
 {
 	Fixed result;
-	result.setRawBits(_fixed_point * arg._fixed_point);
+	result.setRawBits(this->_fixed_point - arg._fixed_point);
 	return result;
 }
+
 Fixed Fixed::operator*(const Fixed &arg) const
 {
 	Fixed result;
-	result.setRawBits(_fixed_point * arg._fixed_point);
+	result.setRawBits((this->_fixed_point * arg._fixed_point) >> _fractional_bit);
 	return result;
 }
+
 Fixed Fixed::operator/(const Fixed &arg) const
 {
 	Fixed result;
-	result.setRawBits(_fixed_point / arg._fixed_point);
+	if (arg._fixed_point == 0)
+	{
+		std::cerr << "Division by zero!" << std::endl;
+		return Fixed(0);
+	}
+	result.setRawBits((this->_fixed_point << _fractional_bit) / arg._fixed_point);
 	return result;
 }
 
-Fixed &Fixed::operator++()
+// Increment / Decrement
+Fixed &Fixed::operator++() // Prefix
 {
-	_fixed_point++;
+	++_fixed_point;
 	return *this;
 }
 
-Fixed &Fixed::operator++(int)
+Fixed Fixed::operator++(int) // Postfix
 {
-	Fixed a(*this);
-	_fixed_point++;
+	Fixed temp(*this);
+	++_fixed_point;
+	return temp;
+}
+
+Fixed &Fixed::operator--() // Prefix
+{
+	--_fixed_point;
 	return *this;
 }
 
-Fixed &Fixed::operator--()
+Fixed Fixed::operator--(int) // Postfix
 {
-	_fixed_point--;
-	return *this;
+	Fixed temp(*this);
+	--_fixed_point;
+	return temp;
 }
 
-Fixed &Fixed::operator--(int)
+// Min / Max
+Fixed &Fixed::min(Fixed &a, Fixed &b)
 {
-	Fixed a(*this);
-	_fixed_point--;
-	return *this;
+	return (a < b) ? a : b;
 }
 
-
-Fixed const &Fixed::min(Fixed const &a, Fixed const &b) {
-	return a < b ? a : b;
-}
-
-Fixed const &Fixed::max(Fixed const &a, Fixed const &b) {
-	return a > b ? a : b;
-}
-
-Fixed const &Fixed::min(Fixed const &a, Fixed const &b)
+const Fixed &Fixed::min(const Fixed &a, const Fixed &b)
 {
-	return Fixed::min(a, b);
+	return (a < b) ? a : b;
 }
 
-Fixed const &Fixed::max(Fixed const &a, Fixed const &b)
+Fixed &Fixed::max(Fixed &a, Fixed &b)
 {
-	return Fixed::max(a, b);
+	return (a > b) ? a : b;
+}
+
+const Fixed &Fixed::max(const Fixed &a, const Fixed &b)
+{
+	return (a > b) ? a : b;
 }

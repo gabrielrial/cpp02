@@ -35,18 +35,19 @@ public:
 	Fixed operator*(const Fixed &other) const;
 	Fixed operator/(const Fixed &other) const;
 
-	Fixed &Fixed::operator++();
-	Fixed &Fixed::operator++(int);
-	Fixed &Fixed::operator--();
-	Fixed &Fixed::operator--(int);
+	Fixed &operator++();
+	Fixed operator++(int);
+	Fixed &operator--();
+	Fixed operator--(int);
 
-	Fixed const	&min(Fixed const &a, Fixed const &b);
-	Fixed const	&max(Fixed const &a, Fixed const &b);
+	static Fixed &min(Fixed &a, Fixed &b);
+	static const Fixed &min(Fixed const &a, Fixed const &b);
+	static Fixed &max(Fixed &a, Fixed &b);
+	static const Fixed &max(Fixed const &a, const Fixed &b);
 
 private:
 	int _fixed_point;
-	static const int _factorial_bit = 8;
-
+	static const int _fractional_bit = 8;
 };
 
 #endif
