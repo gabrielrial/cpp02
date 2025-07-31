@@ -12,7 +12,7 @@ Fixed::Fixed()
 Fixed::Fixed(const int n)
 {
 	std::cout << "Int constructor called" << std::endl;
-	if (n > (INT_MAX / (1 << _factorial_bit)))
+	if (n > (2147483647 / (1 << _factorial_bit)))
 	{
 		std::cerr << "Warning: integer too large, value reset to 0" << std::endl;
 		_fixed_point = 0;
@@ -24,6 +24,12 @@ Fixed::Fixed(const int n)
 Fixed::Fixed(const float f)
 {
 	std::cout << "Float constructor called" << std::endl;
+	if (f > (2147483647 / (1 << _factorial_bit)))
+	{
+		std::cerr << "Warning: integer too large, value reset to 0" << std::endl;
+		_fixed_point = 0;
+		return;
+	}
 	_fixed_point = roundf(f * (1 << _factorial_bit));
 }
 

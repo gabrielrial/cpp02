@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cmath>
 
-
 Fixed::Fixed()
 {
 	std::cout << "Default constructor called" << std::endl;
@@ -12,7 +11,7 @@ Fixed::Fixed()
 Fixed::Fixed(const int n)
 {
 	std::cout << "Int constructor called" << std::endl;
-	if (n > (99999999 / (1 << _factorial_bit)))
+	if (n > (2147483647 / (1 << _factorial_bit)))
 	{
 		std::cerr << "Warning: integer too large, value reset to 0" << std::endl;
 		_fixed_point = 0;
@@ -27,7 +26,7 @@ Fixed::Fixed(const float f)
 	_fixed_point = roundf(f * (1 << _factorial_bit));
 }
 
-Fixed::Fixed(const Fixed& other)
+Fixed::Fixed(const Fixed &other)
 {
 	std::cout << "Copy constructor called" << std::endl;
 	_fixed_point = other.getRawBits();
@@ -38,7 +37,7 @@ Fixed::~Fixed()
 	std::cout << "Destructor called" << std::endl;
 }
 
-Fixed& Fixed::operator=(const Fixed& value)
+Fixed &Fixed::operator=(const Fixed &value)
 {
 	std::cout << "Copy assignment operator called" << std::endl;
 	if (this != &value)
@@ -68,35 +67,39 @@ float Fixed::toFloat(void) const
 	return (float)_fixed_point / (1 << _factorial_bit);
 }
 
-std::ostream &operator<<(std::ostream &os, const Fixed &fixed) {
+std::ostream &operator<<(std::ostream &os, const Fixed &fixed)
+{
 	os << fixed.toFloat();
 	return os;
 }
 
+bool Fixed::operator<(const Fixed &arg) const { return _fixed_point < arg._fixed_point; }
+bool Fixed::operator>(const Fixed &arg) const { return _fixed_point > arg._fixed_point; }
+bool Fixed::operator==(const Fixed &arg) const { return _fixed_point == arg._fixed_point; }
+bool Fixed::operator!=(const Fixed &arg) const { return _fixed_point != arg._fixed_point; }
+bool Fixed::operator<=(const Fixed &arg) const { return _fixed_point <= arg._fixed_point; }
+bool Fixed::operator>=(const Fixed &arg) const { return _fixed_point >= arg._fixed_point; }
 
-bool Fixed::operator<(const Fixed &arg)	const	{return _fixed_point < arg._fixed_point;}
-bool Fixed::operator>(const Fixed &arg)	const	{return _fixed_point > arg._fixed_point;}
-bool Fixed::operator==(const Fixed &arg)const	{return _fixed_point == arg._fixed_point;}
-bool Fixed::operator!=(const Fixed &arg)const	{return _fixed_point != arg._fixed_point;}
-bool Fixed::operator<=(const Fixed &arg)const	{return _fixed_point <= arg._fixed_point;}
-bool Fixed::operator>=(const Fixed &arg)const	{return _fixed_point >= arg._fixed_point;}
-
-Fixed Fixed::operator+(const Fixed &other) const {
+Fixed Fixed::operator+(const Fixed &other) const
+{
 	Fixed result;
 	result.setRawBits(this->_fixed_point + other._fixed_point);
 	return result;
 }
-Fixed Fixed::operator-(const Fixed &arg) const {
+Fixed Fixed::operator-(const Fixed &arg) const
+{
 	Fixed result;
 	result.setRawBits(_fixed_point * arg._fixed_point);
 	return result;
 }
-Fixed Fixed::operator*(const Fixed &arg) const {
+Fixed Fixed::operator*(const Fixed &arg) const
+{
 	Fixed result;
 	result.setRawBits(_fixed_point * arg._fixed_point);
 	return result;
 }
-Fixed Fixed::operator/(const Fixed &arg) const {
+Fixed Fixed::operator/(const Fixed &arg) const
+{
 	Fixed result;
 	result.setRawBits(_fixed_point / arg._fixed_point);
 	return result;
@@ -129,3 +132,20 @@ Fixed &Fixed::operator--(int)
 }
 
 
+Fixed const &Fixed::min(Fixed const &a, Fixed const &b) {
+	return a < b ? a : b;
+}
+
+Fixed const &Fixed::max(Fixed const &a, Fixed const &b) {
+	return a > b ? a : b;
+}
+
+Fixed const &Fixed::min(Fixed const &a, Fixed const &b)
+{
+	return Fixed::min(a, b);
+}
+
+Fixed const &Fixed::max(Fixed const &a, Fixed const &b)
+{
+	return Fixed::max(a, b);
+}

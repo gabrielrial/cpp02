@@ -40,10 +40,13 @@ public:
 	Fixed &Fixed::operator--();
 	Fixed &Fixed::operator--(int);
 
+	Fixed const	&min(Fixed const &a, Fixed const &b);
+	Fixed const	&max(Fixed const &a, Fixed const &b);
 
 private:
 	int _fixed_point;
 	static const int _factorial_bit = 8;
+
 };
 
 #endif
